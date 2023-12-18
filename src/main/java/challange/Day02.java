@@ -4,7 +4,6 @@ import main.java.Day;
 
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.MatchResult;

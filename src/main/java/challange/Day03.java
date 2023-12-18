@@ -12,6 +12,10 @@ public class Day03 extends Day {
         super(name, filePath);
     }
 
+    static boolean isAdjacent(int x1, int y1, int x2, int y2) {
+        return Math.abs(x1 - x2) <= 1 && Math.abs(y1 - y2) <= 1;
+    }
+
     public Object part1() {
         var lines = this.getAllLinesString().split("\n");
         var numbers = new HashSet<Number>();
@@ -71,10 +75,6 @@ public class Day03 extends Day {
                     return r.size() > 1 ? r.get(0) * r.get(1) : 0;
                 })
                 .sum();
-    }
-
-    static boolean isAdjacent(int x1, int y1, int x2, int y2) {
-        return Math.abs(x1 - x2) <= 1 && Math.abs(y1 - y2) <= 1;
     }
 
     record Number(int x, int y, int value) {

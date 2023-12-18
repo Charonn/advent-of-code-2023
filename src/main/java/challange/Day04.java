@@ -17,6 +17,10 @@ public class Day04 extends Day {
         super(name, filePath);
     }
 
+    private static Set<Integer> parseIntegerSet(String input) {
+        return Arrays.stream(input.trim().split(" ")).map(value -> Integer.parseInt(value.replace(" ", ""))).collect(Collectors.toSet());
+    }
+
     public Object part1() {
         var lines = this.getAllLinesString().split("\n");
         var cards = new ArrayList<Card>();
@@ -29,10 +33,6 @@ public class Day04 extends Day {
                     var m = card.amountMatching();
                     return (int) (m > 0 ? Math.pow(2, m) : 0) / 2;
                 }).sum();
-    }
-
-    private static Set<Integer> parseIntegerSet(String input) {
-        return Arrays.stream(input.trim().split(" ")).map(value -> Integer.parseInt(value.replace(" ", ""))).collect(Collectors.toSet());
     }
 
     public Object part2() {
