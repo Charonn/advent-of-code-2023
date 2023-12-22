@@ -43,24 +43,48 @@ public class Day11 extends Day {
                 }
             }
         }
-        var distances = new ArrayList<Integer>();
+
+        return getDistance(galaxies, xVoids, yVoids, 2);
+    }
+
+    private static Long getDistance(ArrayList<Galaxy> galaxies, Set<Integer> xVoids, Set<Integer> yVoids, long offset) {
+        var distances = new ArrayList<Long>();
         for (int i = 0; i < galaxies.size(); i++) {
             var g1 = galaxies.get(i);
             for (int j = i + 1; j < galaxies.size(); j++) {
                 var g2 = galaxies.get(j);
-                var distance = Math.abs(g1.x - g2.x) + Math.abs(g1.y - g2.y);
-                var xDistanceAdd = xVoids.stream().filter(v -> v >= Math.min(g1.x, g2.x) && v <= Math.max(g1.x, g2.x)).count();
-                var yDistanceAdd = yVoids.stream().filter(v -> v >= Math.min(g1.y, g2.y) && v <= Math.max(g1.y, g2.y)).count();
-                distance = (int) (distance + xDistanceAdd + yDistanceAdd);
+                var distance = (long) Math.abs(g1.x - g2.x) + Math.abs(g1.y - g2.y);
+                var voids =  xVoids.stream().filter(v -> v >= Math.min(g1.x, g2.x) && v <= Math.max(g1.x, g2.x)).count();
+                long xDistanceAdd = (xVoids.stream().filter(v -> v >= Math.min(g1.x, g2.x) && v <= Math.max(g1.x, g2.x)).count() * offset) - voids;
+                voids =  yVoids.stream().filter(v -> v >= Math.min(g1.y, g2.y) && v <= Math.max(g1.y, g2.y)).count();
+                long yDistanceAdd = (yVoids.stream().filter(v -> v >= Math.min(g1.y, g2.y) && v <= Math.max(g1.y, g2.y)).count() * offset) - voids;
+                distance = (distance + xDistanceAdd + yDistanceAdd);
                 distances.add(distance);
             }
         }
-        return distances.stream().mapToInt(i -> i.intValue()).sum();
+        return distances.stream().mapToLong(i -> i).sum();
     }
 
     public Object part2() {
-        var lines = this.getAllLinesString();
-        return "";
+        var lines = this.getAllLinesString().split("\n");
+        var map = getMatrix(lines);
+        var mapT = transpose(map);
+        Set<Integer> xVoids;
+        Set<Integer> yVoids;
+
+        xVoids = findVoids(map);
+        yVoids = findVoids(mapT);
+
+        var galaxies = new ArrayList<Galaxy>();
+        for (int x = 0; x < map.length; x++) {
+            for (int y = 0; y < mapT.length; y++) {
+                if (Objects.equals(map[x][y], "#")) {
+                    galaxies.add(new Galaxy(x, y, x + y));
+                }
+            }
+        }
+
+        return getDistance(galaxies, xVoids, yVoids, 1000000);
     }
 
     private String[][] getMatrix(String[] input) {
